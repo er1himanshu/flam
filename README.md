@@ -1,9 +1,10 @@
+```markdown
 # FlamAI Lightweight TypeScript ORM Assignment
 
-This repository is a monorepo containing:
+This repository is a monorepo with:
 
-- `packages/orm`: a lightweight, typed TypeScript ORM for Postgres/serverless Postgres
-- `apps/todo-app`: a small Todo app that consumes the ORM as a workspace package dependency
+- `packages/orm`: a lightweight, typed TypeScript ORM for Postgres / serverless Postgres
+- `apps/todo-app`: a small Todo app that uses the ORM as a workspace package dependency
 
 ## Monorepo structure
 
@@ -35,13 +36,13 @@ flam/
 npm install
 ```
 
-2. Configure database:
+2. Configure the database:
 
 ```bash
 cp .env.example .env
 ```
 
-Set `DATABASE_URL` to a Postgres connection string (Neon/Supabase/local Postgres all work).
+Set `DATABASE_URL` to a Postgres connection string. Neon, Supabase, or local Postgres all work.
 
 3. Build all workspaces:
 
@@ -49,13 +50,13 @@ Set `DATABASE_URL` to a Postgres connection string (Neon/Supabase/local Postgres
 npm run build
 ```
 
-4. Run Todo app (development):
+4. Run the Todo app in development:
 
 ```bash
 npm run dev
 ```
 
-5. Run Todo app (production build):
+5. Run the Todo app after build:
 
 ```bash
 npm run build
@@ -72,9 +73,9 @@ Example:
 DATABASE_URL=******host:5432/dbname
 ```
 
-At startup, the app auto-creates a `todo` table if it does not exist.
+At startup, the app creates the `todo` table if it does not already exist.
 
-## ORM API overview
+## ORM API
 
 Model definition:
 
@@ -86,7 +87,7 @@ const Todo = defineModel('todo', {
 });
 ```
 
-Client usage:
+Example usage:
 
 ```ts
 await db.todo.create({ title: 'Finish assignment', completed: false });
@@ -95,15 +96,15 @@ await db.todo.update({ where: { id: 1 }, data: { completed: true } });
 await db.todo.delete({ where: { id: 1 } });
 ```
 
-## Type design and inference approach
+## Type design
 
-- `defineModel(...)` captures model name and schema at type level.
-- `InferSelect<TModel>` maps schema fields to strongly typed result objects.
-- `InferCreate<TModel>` excludes generated fields and marks default/nullable columns as optional.
-- `Where<TModel>` is a typed partial of the selected model fields.
-- `ModelClient<TModel>` methods (`create`, `findMany`, `update`, `delete`) preserve field-level type safety.
+- `defineModel(...)` captures the model name and schema at type level.
+- `InferSelect<TModel>` maps schema fields to typed result objects.
+- `InferCreate<TModel>` excludes generated fields and makes default/nullable fields optional.
+- `Where<TModel>` is a typed partial of selected fields.
+- `ModelClient<TModel>` keeps `create`, `findMany`, `update`, and `delete` type-safe.
 
-Invalid field names/types are caught at compile time.
+Invalid field names or types are caught at compile time.
 
 ## Query flow
 
@@ -120,10 +121,10 @@ Invalid field names/types are caught at compile time.
 - List todos
 - Mark todo as completed
 - Delete todo
-- Filter by all/completed/incomplete
+- Filter by all / completed / incomplete
 - Minimal frontend UI in `apps/todo-app/public/index.html`
 
-## Deployment / packaging readiness
+## Deployment
 
 ### ORM package publishing
 
@@ -133,35 +134,21 @@ From `packages/orm`:
 npm publish --access public
 ```
 
-Package includes built `dist` output and exports configured in `package.json`.
-
 ### Todo app deployment
 
-The app is standard Node + Express and can be deployed to Render/Railway/Fly/Vercel (Node runtime) by setting:
+The app is a standard Node + Express app and can be deployed to Render, Railway, Fly, or Vercel with a Node runtime.
+
+Use:
 
 - build command: `npm run build`
 - start command: `npm run start`
 - env var: `DATABASE_URL`
 
-## Limitations (intentional)
+## Limitations
 
 - No relation support
-- Equality-based `where` only (no OR/IN/gt/lt)
+- Equality-based `where` only
 - No migrations system
 - No transaction helper abstraction
 - No query chaining API
-
-## Time spent
-
-~7-9 hours (design, implementation, docs, validation).
-
-## AI usage disclosure
-
-Used GitHub Copilot/Copilot Coding Agent for:
-
-- Initial architecture scaffolding
-- Type-level API shaping
-- SQL builder/code review assistance
-- README/architecture drafting
-
-All final code and structure were reviewed and validated in this repository.
+```
