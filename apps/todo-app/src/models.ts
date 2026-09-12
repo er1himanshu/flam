@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { boolean, createOrmClient, defineModel, number, string } from '@flamai/light-orm';
 
 export const Todo = defineModel('todo', {
@@ -5,6 +6,7 @@ export const Todo = defineModel('todo', {
   title: string(),
   completed: boolean({ default: false })
 });
+
 const models = [Todo] as const;
 
 const connectionString = process.env.DATABASE_URL;
